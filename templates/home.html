@@ -1,7 +1,45 @@
 {% extends "template.html" %}
 
 {% block conteudo %}
-<div>
-    <p>Bem-vindo ao menu principal. Escolha uma opção no menu de navegação.</p>
+<div class="mt-10 text-center">
+    <h1 class="text-4xl font-bold mb-6">Bem-vindo ao Serviço Digital</h1>
+    <p class="text-2xl mb-8">Escolha uma opção no menu de navegação.</p>
+    
+    <section id="about" class="my-10">
+        <h2 class="text-3xl font-semibold mb-4">Sobre Nós</h2>
+        <p class="text-lg mb-6">Somos uma empresa dedicada a fornecer os melhores serviços digitais para nossos clientes. Nossa missão é facilitar sua vida através da tecnologia.</p>
+    </section>
+    
+    <section id="services" class="my-10">
+        <h2 class="text-3xl font-semibold mb-4">Nossos Serviços</h2>
+        <div class="flex justify-around flex-wrap">
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <h3 class="text-2xl font-bold mb-2">Extração de Dados de Arquivos PDF</h3>
+                <p class="text-lg">Oferecemos um serviço avançado de extração de dados automaticamente de arquivos PDF. Este serviço permite que você converta seus documentos PDF em dados estruturados de forma rápida e eficiente.</p>
+            </div>
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <h3 class="text-2xl font-bold mb-2">Treinamento de Novo Padrão de Dados (Em breve)</h3>
+                <p class="text-lg">Em breve, lançaremos um serviço de treinamento para novos padrões de dados. Fique atento para mais atualizações.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="testimonials" class="my-10">
+        <h2 class="text-3xl font-semibold mb-4">Depoimentos</h2>
+        <div class="flex justify-around flex-wrap">
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <p class="text-lg">"Serviço excelente, superou minhas expectativas!"</p>
+                <p class="text-right mt-4">- Cliente 1</p>
+            </div>
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <p class="text-lg">"Ótima experiência, recomendo a todos."</p>
+                <p class="text-right mt-4">- Cliente 2</p>
+            </div>
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <p class="text-lg">"Atendimento de primeira qualidade."</p>
+                <p class="text-right mt-4">- Cliente 3</p>
+            </div>
+        </div>
+    </section>
 </div>
 {% endblock %}
