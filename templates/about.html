@@ -1,0 +1,30 @@
+{% extends "template.html" %}
+
+{% block conteudo %}
+<div class="mt-10 text-center">
+    <h1 class="text-4xl font-bold mb-6">Sobre Nós</h1>
+    
+    <section id="history" class="my-10">
+        <h2 class="text-3xl font-semibold mb-4">Nossa História</h2>
+        <p class="text-lg mb-6">Nossa jornada começou no trabalho de conclusão de curso (TCC), cujo tema era processamento de dados. Desde então, temos nos dedicado a fornecer soluções avançadas em extração e processamento de dados.</p>
+    </section>
+    
+    <section id="team" class="my-10">
+        <h2 class="text-3xl font-semibold mb-4">Nossa Equipe</h2>
+        <div class="flex justify-around flex-wrap">
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <h3 class="text-2xl font-bold mb-2">Bruno</h3>
+                <p class="text-lg">Especialista em desenvolvimento backend e processamento de dados.</p>
+            </div>
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <h3 class="text-2xl font-bold mb-2">Gabriel</h3>
+                <p class="text-lg">Responsável pelo design e desenvolvimento frontend, garantindo interfaces amigáveis.</p>
+            </div>
+            <div class="bg-white shadow-lg p-6 m-4 w-80">
+                <h3 class="text-2xl font-bold mb-2">Victor</h3>
+                <p class="text-lg">Engenheiro de dados, focado em modelagem e análise de dados.</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
