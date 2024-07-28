@@ -16,9 +16,9 @@ except mysql.connector.Error as err:
 
 cursor = conn.cursor()
 
-cursor.execute("DROP DATABASE IF EXISTS `flask_reader`;")
-cursor.execute("CREATE DATABASE `flask_reader`;")
-cursor.execute("USE `flask_reader`;")
+cursor.execute("DROP DATABASE IF EXISTS `db_upflow`;")
+cursor.execute("CREATE DATABASE `db_upflow`;")
+cursor.execute("USE `db_upflow`;")
 
 TABLES = {}
 
@@ -46,6 +46,7 @@ TABLES['tbEmployee'] = ('''
         EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
         Name VARCHAR(255) NOT NULL,
         Email VARCHAR(255) NOT NULL,
+        Password VARCHAR(255) NOT NULL,                
         Phone CHAR(15),
         CompanyID INT,
         PermissionLevelID INT,
@@ -86,6 +87,15 @@ TABLES['tbFileData'] = ('''
         Information JSON,
         FOREIGN KEY (TemplateID) REFERENCES tbTemplate(TemplateID),
         FOREIGN KEY (FileID) REFERENCES tbFiles(FileID)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
+
+TABLES['tbContacts'] = ('''
+    CREATE TABLE tbContacts (
+        ContactID INT AUTO_INCREMENT PRIMARY KEY,
+        Name VARCHAR(255) NOT NULL,
+        Email VARCHAR(255) NOT NULL,
+        Message TEXT NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 ''')
 
