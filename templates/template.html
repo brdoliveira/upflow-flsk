@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ferramentas</title>
+    <title>Upflow</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
@@ -15,9 +15,11 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light col-12 d-flex flex-wrap">
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
-                    </li>
+                        <li><a href="{{ url_for('home') }}" class="text-white">Home</a></li>
+                        <li><a href="{{ url_for('services') }}" class="text-white">Serviços</a></li>
+                        <li><a href="{{ url_for('about') }}" class="text-white">Sobre</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="text-white">Contato</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-white">Login</a></li>
                 </ul>
             </div>
         </nav>
@@ -32,17 +34,15 @@
                 </ul>
                 {% endif %}
                 {% endwith %}
-
-                <div class="page-header">
-                    <h1>{{ titulo }}</h1>
-                </div>
-
                 {% block conteudo %}{% endblock %}
-
             </div>
         </div>
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <footer class="bg-blue-500 text-white py-4 mt-10">
+        <p>&copy; 2024 Serviço Digital. Todos os direitos reservados.</p>
+        <p><a href="mailto:contato@servicodigital.com" class="underline">contato@servicodigital.com</a></p>
+    </footer>
 </body>
 
 </html>
