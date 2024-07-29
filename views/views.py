@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.security import check_password_hash
 from app import app, db
 from models import Contact, Employee
@@ -45,3 +45,7 @@ def login():
             flash('Email ou senha incorretos.', 'danger')
     
     return render_template('login.html')
+
+@app.route('/uploads/<nome_arquivo>')
+def imagem(nome_arquivo):
+    return send_from_directory('uploads', nome_arquivo)
