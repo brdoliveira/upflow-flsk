@@ -12,14 +12,28 @@
 
 <body>
     <div class="col-12 d-flex flex-wrap">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light col-12 d-flex flex-wrap">
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                        <li><a href="{{ url_for('home') }}" class="text-white">Home</a></li>
-                        <li><a href="{{ url_for('services') }}" class="text-white">Serviços</a></li>
-                        <li><a href="{{ url_for('about') }}" class="text-white">Sobre</a></li>
-                        <li><a href="{{ url_for('contact') }}" class="text-white">Contato</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-white">Login</a></li>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light col-12">
+            <a class="navbar-brand" href="{{ url_for('home') }}">UpFlow</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('services') }}">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contato</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary text-white" href="{{ url_for('login') }}">Login</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -38,11 +52,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-    <footer class="bg-blue-500 text-white py-4 mt-10">
+    <footer class="footer mt-4">
         <p>&copy; 2024 Serviço Digital. Todos os direitos reservados.</p>
-        <p><a href="mailto:contato@servicodigital.com" class="underline">contato@servicodigital.com</a></p>
+        <p><a href="mailto:contato@servicodigital.com" class="text-white">contato@servicodigital.com</a></p>
     </footer>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
 </body>
 
 </html>
