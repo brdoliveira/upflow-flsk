@@ -2,22 +2,19 @@
 
 {% block conteudo %}
 <div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">Bem-vindo ao Serviço Digital</h1>
-    <p class="text-2xl mb-8">Escolha uma opção no menu de navegação.</p>
-    
     <section id="about" class="my-10">
         <h2 class="text-3xl font-semibold mb-4">Sobre Nós</h2>
         <p class="text-lg mb-6">Somos uma empresa dedicada a fornecer os melhores serviços digitais para nossos clientes. Nossa missão é facilitar sua vida através da tecnologia.</p>
     </section>
     
     <section id="services" class="my-10">
-        <h2 class="text-3xl font-semibold mb-4">Nossos Serviços</h2>
-        <div class="flex justify-around flex-wrap">
-            <div class="bg-white shadow-lg p-6 m-4 w-80">
+        <h2 class="text-3xl font-semibold my-4">Nossos Serviços</h2>
+        <div class="d-flex justify-content-around flex-wrap">
+            <div class="bg-white col-5 p-4 w-80 shadow-lg">
                 <h3 class="text-2xl font-bold mb-2">Extração de Dados de Arquivos PDF</h3>
                 <p class="text-lg">Oferecemos um serviço avançado de extração de dados automaticamente de arquivos PDF. Este serviço permite que você converta seus documentos PDF em dados estruturados de forma rápida e eficiente.</p>
             </div>
-            <div class="bg-white shadow-lg p-6 m-4 w-80">
+            <div class="bg-white col-5 p-4 w-80 shadow-lg">
                 <h3 class="text-2xl font-bold mb-2">Treinamento de Novo Padrão de Dados (Em breve)</h3>
                 <p class="text-lg">Em breve, lançaremos um serviço de treinamento para novos padrões de dados. Fique atento para mais atualizações.</p>
             </div>
@@ -25,19 +22,28 @@
     </section>
     
     <section id="testimonials" class="my-10">
-        <h2 class="text-3xl font-semibold mb-4">Depoimentos</h2>
-        <div class="flex justify-around flex-wrap">
-            <div class="bg-white shadow-lg p-6 m-4 w-80">
-                <p class="text-lg">"Serviço excelente, superou minhas expectativas!"</p>
-                <p class="text-right mt-4">- Cliente 1</p>
+        <h2 class="text-3xl font-semibold my-4">Depoimentos</h2>
+        <div class="d-flex justify-content-around flex-wrap">
+            <div class="card p-4 shadow-lg" style="width: 18rem;">
+                <div class="card-body">
+                    <img src="{{ url_for('imagem', nome_arquivo='profile_1.jpg') }}" class="card-img-top border border-black rounded-pill" alt="Cliente 1">
+                    <p class="card-title fw-bold py-1">Cliente 1</p>
+                    <p class="card-text">"Serviço excelente, superou minhas expectativas!"</p>
+                </div>
             </div>
-            <div class="bg-white shadow-lg p-6 m-4 w-80">
-                <p class="text-lg">"Ótima experiência, recomendo a todos."</p>
-                <p class="text-right mt-4">- Cliente 2</p>
+            <div class="card p-4 shadow-lg" style="width: 18rem;">
+                <div class="card-body">
+                    <img src="{{ url_for('imagem', nome_arquivo='profile_2.jpg') }}" class="card-img-top border border-black rounded-pill" alt="Cliente 2">
+                    <p class="card-title fw-bold py-1">Cliente 2</p>
+                    <p class="card-text">"Ótima experiência, recomendo a todos."</p>
+                </div>
             </div>
-            <div class="bg-white shadow-lg p-6 m-4 w-80">
-                <p class="text-lg">"Atendimento de primeira qualidade."</p>
-                <p class="text-right mt-4">- Cliente 3</p>
+            <div class="card p-4 shadow-lg" style="width: 18rem;">
+                <div class="card-body">
+                    <img src="{{ url_for('imagem', nome_arquivo='profile_3.jpg') }}" class="card-img-top border border-black rounded-pill" alt="Cliente 3">
+                    <p class="card-title fw-bold py-1">Cliente 3</p>
+                    <p class="card-text">"Atendimento de primeira qualidade."</p>
+                </div>
             </div>
         </div>
     </section>
