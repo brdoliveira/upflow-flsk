@@ -2,19 +2,24 @@
 
 {% block conteudo %}
 <div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">Login</h1>
-    <form action="/login" method="POST" class="max-w-lg mx-auto bg-white shadow-lg p-6">
-        <div class="mb-4">
-            <label for="email" class="block text-lg font-medium">Email</label>
-            <input type="email" id="email" name="email" required class="w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div class="mb-4">
-            <label for="password" class="block text-lg font-medium">Senha</label>
-            <input type="password" id="password" name="password" required class="w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Entrar</button>
-        </div>
-    </form>
+    <div class="col-12 d-flex">
+        <div class="col-10"></div>
+        <div class="col-2 bg-white">
+            <h1 class="text-4xl font-bold mb-6">Login</h1>
+            <form action="/login" method="POST">
+                <div class="mb-4">
+                    <label for="email" class="block text-lg font-medium">Email</label>
+                    <input type="email" id="email" name="email" required class="w-full p-2 border border-gray-300 rounded">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-lg font-medium">Senha</label>
+                    <input type="password" id="password" name="password" required class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Entrar</button>
+            </div>
+        </form>
+    </div>
+    </div>
 </div>
 {% endblock %}
