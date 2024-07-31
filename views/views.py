@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, session
 from werkzeug.security import check_password_hash
 from app import app, db
 from models import Contact, Employee
@@ -44,12 +44,19 @@ def login():
         employee = Employee.query.filter_by(Email=email).first()
         
         if employee and check_password_hash(employee.Password, password):
+            session['employee'] = employee
             flash('Login bem-sucedido!', 'success')
             return redirect(url_for('home'))
         else:
             flash('Email ou senha incorretos.', 'danger')
     
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session['employee'] = None
+    flash('Logout efetuado com sucesso!')
+    return redirect(url_for('index'))
 
 @app.route('/uploads/<nome_arquivo>')
 def imagem(nome_arquivo):
