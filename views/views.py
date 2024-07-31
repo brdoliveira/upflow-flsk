@@ -5,6 +5,8 @@ from models import Contact, Employee
 
 @app.route('/')
 def home():
+    if session.get('logged_in'):
+        return render_template('dashboard.html')
     return render_template('home.html')
 
 @app.route('/services')
@@ -44,7 +46,9 @@ def login():
         employee = Employee.query.filter_by(Email=email).first()
         
         if employee and check_password_hash(employee.Password, password):
-            session['employee'] = employee
+            session['logged_in'] = True
+            session['employee_id'] = employee.EmployeeID
+            session['permission_level_id'] = employee.PermissionLevelID
             flash('Login bem-sucedido!', 'success')
             return redirect(url_for('home'))
         else:
@@ -54,9 +58,11 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session['employee'] = None
+    session.pop('logged_in', None)
+    session.pop('employee_id', None)
+    session.pop('permission_level_id', None)
     flash('Logout efetuado com sucesso!')
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 @app.route('/uploads/<nome_arquivo>')
 def imagem(nome_arquivo):
