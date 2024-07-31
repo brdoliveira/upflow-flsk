@@ -2,13 +2,16 @@ from flask import render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash
 from app import app, db
 from models import PermissionLevel, Employee, Company
+from decorators import login_required
 
 @app.route('/employees', methods=['GET'])
+@login_required
 def list_employees():
     employees = Employee.query.all()
     return render_template('list_employees.html', employees=employees)
 
 @app.route('/employees/add', methods=['GET', 'POST'])
+@login_required
 def add_employee():
     companies = Company.query.all()
     permission_levels = PermissionLevel.query.all()
@@ -30,6 +33,7 @@ def add_employee():
     return render_template('employee_form.html', companies=companies, permission_levels=permission_levels, employee=None)
 
 @app.route('/employees/edit/<int:employee_id>', methods=['GET', 'POST'])
+@login_required
 def edit_employee(employee_id):
     employee = Employee.query.get_or_404(employee_id)
     companies = Company.query.all()
@@ -51,6 +55,7 @@ def edit_employee(employee_id):
     return render_template('employee_form.html', companies=companies, permission_levels=permission_levels, employee=employee)
 
 @app.route('/employees/delete/<int:employee_id>', methods=['POST'])
+@login_required
 def delete_employee(employee_id):
     employee = Employee.query.get_or_404(employee_id)
     db.session.delete(employee)
