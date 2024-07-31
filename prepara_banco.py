@@ -117,7 +117,7 @@ cursor.execute("INSERT INTO tbCompany (Name, CNPJ, Address, Phone, FoundationDat
                ('Admin Company', '12345678000195', '123 Admin St', '1234567890', '2020-01-01', 'Technology');")
 cursor.execute ("\
 INSERT INTO tbEmployee (Name, Email, Password, Phone, CompanyID, PermissionLevelID) VALUES\
-('Admin User', 'admin@example.com', 'adminpassword', '0987654321',\
+('Admin User', 'admin@example.com', 'scrypt:32768:8:1$gvPkYL3FFzIxjUyY$591d3a014eab7edd50c90dc13d2660c1918d51fa60d1cdf8ed3a7a7280b266345fe215e4ab3df0a0efaa8107c2b7748fa3c5d2bd55332058cb9e65d3dfa1ca79', '0987654321',\
 (SELECT CompanyID FROM tbCompany WHERE Name='Admin Company'),\
 (SELECT LevelID FROM tbPermissionLevel WHERE Description='Admin'))\
 ")
