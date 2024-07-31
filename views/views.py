@@ -30,6 +30,11 @@ def contact():
     
     return render_template('contact.html')
 
+@app.route('/contacts', methods=['GET'])
+def list_contacts():
+    contacts = Contact.query.all()
+    return render_template('list_contacts.html', contacts=contacts)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
