@@ -11,10 +11,38 @@
 </head>
 
 <body>
-    <div class="col-12 d-flex flex-wrap">
+    <div class="{% if session.get('logged_in') %} col-12 d-flex flex-wrap {% endif %}">
+        {% if session.get('logged_in') %}
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark col-2" style="height: 100vh;">
+            <a href="{{ url_for('home') }}"
+                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-4">UpFlow</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="{{ url_for('home') }}" class="nav-link text-white">Home</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('list_contacts') }}" class="nav-link text-white">Contatos</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('list_employees') }}" class="nav-link text-white">Funcionários</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('list_companies') }}" class="nav-link text-white">Empresas</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('logout') }}" class="nav-link btn btn-primary text-white mt-3">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <div class="b-example-divider"></div>
+        {% else %}
         <nav class="navbar navbar-expand-lg navbar-light bg-light col-12">
             <a class="navbar-brand" href="{{ url_for('home') }}">UpFlow</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -37,7 +65,8 @@
                 </ul>
             </div>
         </nav>
-        <div class="col-12 d-flex flex-wrap justify-content-center align-items-center pt-4 mt-4">
+        {% endif %}
+        <div class="{% if session.get('logged_in') %} col-10 {% endif %}">
             <div class="container">
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -50,13 +79,14 @@
                 {% endwith %}
                 {% block conteudo %}{% endblock %}
             </div>
+            <footer class="footer mt-4 bg-dark text-white text-center py-3">
+                <p>&copy; 2024 Serviço Digital. Todos os direitos reservados.</p>
+                <p><a href="mailto:contato@servicodigital.com" class="text-white">contato@servicodigital.com</a></p>
+            </footer>
         </div>
     </div>
-    <footer class="footer mt-4">
-        <p>&copy; 2024 Serviço Digital. Todos os direitos reservados.</p>
-        <p><a href="mailto:contato@servicodigital.com" class="text-white">contato@servicodigital.com</a></p>
-    </footer>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
 </body>
 
 </html>
