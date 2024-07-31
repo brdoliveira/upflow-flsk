@@ -1,13 +1,16 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app, db
 from models import Company
+from decorators import login_required
 
 @app.route('/companies', methods=['GET'])
+@login_required
 def list_companies():
     companies = Company.query.all()
     return render_template('list_companies.html', companies=companies)
 
 @app.route('/companies/add', methods=['GET', 'POST'])
+@login_required
 def add_company():
     if request.method == 'POST':
         name = request.form['name']
@@ -26,6 +29,7 @@ def add_company():
     return render_template('company_form.html', company=None)
 
 @app.route('/companies/edit/<int:company_id>', methods=['GET', 'POST'])
+@login_required
 def edit_company(company_id):
     company = Company.query.get_or_404(company_id)
     if request.method == 'POST':
@@ -43,6 +47,7 @@ def edit_company(company_id):
     return render_template('company_form.html', company=company)
 
 @app.route('/companies/delete/<int:company_id>', methods=['POST'])
+@login_required
 def delete_company(company_id):
     company = Company.query.get_or_404(company_id)
     db.session.delete(company)
