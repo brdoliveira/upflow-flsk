@@ -112,6 +112,16 @@ for table_name in TABLES:
     else:
         print('OK')
 
+cursor.execute("INSERT INTO tbPermissionLevel (Description) VALUES('Admin'),('Editor'),('Viewer'),('Guest');")
+cursor.execute("INSERT INTO tbCompany (Name, CNPJ, Address, Phone, FoundationDate, Sector) VALUES\
+               ('Admin Company', '12345678000195', '123 Admin St', '1234567890', '2020-01-01', 'Technology');")
+cursor.execute ("\
+INSERT INTO tbEmployee (Name, Email, Password, Phone, CompanyID, PermissionLevelID) VALUES\
+('Admin User', 'admin@example.com', 'adminpassword', '0987654321',\
+(SELECT CompanyID FROM tbCompany WHERE Name='Admin Company'),\
+(SELECT LevelID FROM tbPermissionLevel WHERE Description='Admin'))\
+")
+
 # Commitando se não nada tem efeito
 conn.commit()
 
