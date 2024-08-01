@@ -23,15 +23,19 @@
                 <li class="nav-item">
                     <a href="{{ url_for('home') }}" class="nav-link text-white">Home</a>
                 </li>
+                {% if session.get('permission_level_id') == 1 %} {# Admin only #}
                 <li>
                     <a href="{{ url_for('list_contacts') }}" class="nav-link text-white">Contatos</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('list_employees') }}" class="nav-link text-white">Funcionários</a>
-                </li>
-                <li>
                     <a href="{{ url_for('list_companies') }}" class="nav-link text-white">Empresas</a>
                 </li>
+                {% endif %}
+                {% if session.get('permission_level_id') <= 3 %} {# Viewer and above #}
+                <li>
+                    <a href="{{ url_for('list_employees') }}" class="nav-link text-white">Funcionários</a>
+                </li>
+                {% endif %}
                 <li>
                     <a href="{{ url_for('logout') }}" class="nav-link btn btn-primary text-white mt-3">Logout</a>
                 </li>
