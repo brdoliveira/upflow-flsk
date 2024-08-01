@@ -1,4 +1,6 @@
 from app import db
+from datetime import datetime
+import os
 
 class Contact(db.Model):
     __tablename__ = 'tbContacts'
@@ -43,6 +45,31 @@ class Employee(db.Model):
 
     Company = db.relationship('Company', backref=db.backref('employees', lazy=True))
     PermissionLevel = db.relationship('PermissionLevel', backref=db.backref('employees', lazy=True))
+
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+class File(db.Model):
+    __tablename__ = 'tbFiles'
+    FileID = db.Column(db.Integer, primary_key=True)
+    Status = db.Column(db.String(50))
+    InsertionDate = db.Column(db.DateTime, default=datetime.utcnow)
+    FilePath = db.Column(db.String(255), nullable=False)
+    file_data = db.relationship('FileData', backref='file', lazy=True)
+
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+    def delete_file(self):
+        if os.path.exists(self.FilePath):
+            os.remove(self.FilePath)
+
+class FileData(db.Model):
+    __tablename__ = 'tbFileData'
+    DataID = db.Column(db.Integer, primary_key=True)
+    FileID = db.Column(db.Integer, db.ForeignKey('tbFiles.FileID'), nullable=False)
+    InsertionDate = db.Column(db.DateTime, default=datetime.utcnow)
+    Information = db.Column(db.JSON, nullable=False)
 
     def __repr__(self):
         return '<Name %r>' % self.name
