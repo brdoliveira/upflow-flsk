@@ -9,6 +9,7 @@ db = SQLAlchemy(app)
 from views.views import *
 from views.views_companies import *
 from views.views_users import *
+from views.views_files import *
 
 if __name__ == '__main__':
     app.run(debug=True)
