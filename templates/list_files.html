@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+
+{% block conteudo %}
+<div class="mt-10 text-center">
+    <h1 class="text-4xl font-bold mb-6">Lista de Arquivos</h1>
+    <table class="table-auto w-full">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Data de Inserção</th>
+                <th class="px-4 py-2">Caminho do Arquivo</th>
+                <th class="px-4 py-2">Template ID</th>
+                <th class="px-4 py-2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td class="border px-4 py-2">{{ file.FileID }}</td>
+                <td class="border px-4 py-2">{{ file.Status }}</td>
+                <td class="border px-4 py-2">{{ file.InsertionDate }}</td>
+                <td class="border px-4 py-2">{{ file.FilePath }}</td>
+                <td class="border px-4 py-2">{{ file.TemplateID }}</td>
+                <td class="border px-4 py-2">
+                    <form action="{{ url_for('delete_file', file_id=file.FileID) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este arquivo?');">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Deletar</button>
+                    </form>
+                </td>
+            </tr>
+            {% for file_data in file.file_data %}
+            <tr>
+                <td class="border px-4 py-2" colspan="6">
+                    <strong>Data ID:</strong> {{ file_data.DataID }} <br>
+                    <strong>Data de Inserção:</strong> {{ file_data.InsertionDate }} <br>
+                    <strong>Informação:</strong> {{ file_data.Information }}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
