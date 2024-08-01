@@ -55,17 +55,17 @@ TABLES['tbEmployee'] = ('''
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 ''')
 
-TABLES['tbTemplate'] = ('''
-    CREATE TABLE tbTemplate (
-        TemplateID INT AUTO_INCREMENT PRIMARY KEY,
-        InsertionDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-        Description VARCHAR(255),
-        SelectedData TEXT,
-        FilePath VARCHAR(255) NOT NULL,
-        EmployeeID INT,
-        FOREIGN KEY (EmployeeID) REFERENCES tbEmployee(EmployeeID)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-''')
+# TABLES['tbTemplate'] = ('''
+#     CREATE TABLE tbTemplate (
+#         TemplateID INT AUTO_INCREMENT PRIMARY KEY,
+#         InsertionDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+#         Description VARCHAR(255),
+#         SelectedData TEXT,
+#         FilePath VARCHAR(255) NOT NULL,
+#         EmployeeID INT,
+#         FOREIGN KEY (EmployeeID) REFERENCES tbEmployee(EmployeeID)
+#     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+# ''')
 
 TABLES['tbFiles'] = ('''
     CREATE TABLE tbFiles (
@@ -73,8 +73,7 @@ TABLES['tbFiles'] = ('''
         Status VARCHAR(50),
         InsertionDate DATETIME DEFAULT CURRENT_TIMESTAMP,
         FilePath VARCHAR(255) NOT NULL,
-        TemplateID INT,
-        FOREIGN KEY (TemplateID) REFERENCES tbTemplate(TemplateID)
+        TemplateID INT
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 ''')
 
