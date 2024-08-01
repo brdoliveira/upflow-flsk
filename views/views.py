@@ -2,6 +2,8 @@ from flask import render_template, request, redirect, url_for, flash, send_from_
 from werkzeug.security import check_password_hash
 from app import app, db
 from models import Contact, Employee
+from decorators import login_required, permission_required
+from enums import PermissionLevel
 
 @app.route('/')
 def home():
@@ -33,6 +35,8 @@ def contact():
     return render_template('contact.html')
 
 @app.route('/contacts', methods=['GET'])
+@login_required
+@permission_required(PermissionLevel.ADMIN)
 def list_contacts():
     contacts = Contact.query.all()
     return render_template('list_contacts.html', contacts=contacts)
@@ -49,6 +53,7 @@ def login():
             session['logged_in'] = True
             session['employee_id'] = employee.EmployeeID
             session['permission_level_id'] = employee.PermissionLevelID
+            session['company_id'] = employee.CompanyID
             flash('Login bem-sucedido!', 'success')
             return redirect(url_for('home'))
         else:
@@ -61,6 +66,7 @@ def logout():
     session.pop('logged_in', None)
     session.pop('employee_id', None)
     session.pop('permission_level_id', None)
+    session.pop('company_id', None)
     flash('Logout efetuado com sucesso!')
     return redirect(url_for('home'))
 
