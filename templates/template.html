@@ -31,9 +31,19 @@
                     <a href="{{ url_for('list_companies') }}" class="nav-link text-white">Empresas</a>
                 </li>
                 {% endif %}
-                {% if session.get('permission_level_id') <= 3 %} {# Viewer and above #}
+                {% if session.get('permission_level_id') <= 2 %} {# Editor and above #}
                 <li>
                     <a href="{{ url_for('list_employees') }}" class="nav-link text-white">Funcionários</a>
+                </li>
+                {% endif %}
+                {% if session.get('permission_level_id') <= 3 %} {# Viewer and above #}
+                <li>
+                    <a href="{{ url_for('list_files') }}" class="nav-link text-white">Arquivos</a>
+                </li>
+                {% endif %}
+                {% if session.get('permission_level_id') <= 4 %} {# Guest and above #}
+                <li>
+                    <a href="{{ url_for('upload_file') }}" class="nav-link text-white">Upload de Arquivos</a>
                 </li>
                 {% endif %}
                 <li>
