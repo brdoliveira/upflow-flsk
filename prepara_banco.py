@@ -84,7 +84,6 @@ TABLES['tbFileData'] = ('''
         FileID INT,
         InsertionDate DATETIME DEFAULT CURRENT_TIMESTAMP,
         Information JSON,
-        FOREIGN KEY (TemplateID) REFERENCES tbTemplate(TemplateID),
         FOREIGN KEY (FileID) REFERENCES tbFiles(FileID)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 ''')
