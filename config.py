@@ -10,5 +10,5 @@ SQLALCHEMY_DATABASE_URI = \
         database = 'db_upflow'
     )
 UPLOAD_PATH = os.path.dirname(os.path.abspath(__file__)) + "/uploads"
-UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + "/uploads/file"
+UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__)) + "/uploads/files"
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
