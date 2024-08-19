@@ -200,17 +200,17 @@ class PDFClassifier:
 classifier = PDFClassifier()
 
 # Carregar e processar PDFs de imposto de renda
-classifier.load_pdfs(r"C:\Users\brufe\OneDrive\Área de Trabalho\Git\upflow-flsk\uploads\ml_files\imposto_de_renda", label=2)
+classifier.load_pdfs(r".\uploads\ml_files\imposto_de_renda", label=2)
 
 # Carregar e processar PDFs de notas fiscais
-classifier.load_pdfs(r"C:\Users\brufe\OneDrive\Área de Trabalho\Git\upflow-flsk\uploads\ml_files\nota_fiscal", label=1)
+classifier.load_pdfs(r".\uploads\ml_files\nota_fiscal", label=1)
 
 # Carregar e processar PDFs de boletos
-classifier.load_pdfs(r"C:\Users\brufe\OneDrive\Área de Trabalho\Git\upflow-flsk\uploads\ml_files\boleto", label=0)
+classifier.load_pdfs(r".\upflow-flsk\uploads\ml_files\boleto", label=0)
 
 # Treinar o modelo
 classifier.train_model()
 
 # Fazer uma predição em um novo PDF
-prediction = classifier.predict_pdf_type(r'C:\Users\brufe\OneDrive\Área de Trabalho\Git\upflow-flsk\uploads\ml_files\nota_fiscal\nota_fiscal_0.pdf')
+prediction = classifier.predict_pdf_type(r'.\uploads\ml_files\nota_fiscal\nota_fiscal_0.pdf')
 print(prediction)
