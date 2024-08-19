@@ -196,21 +196,22 @@ class PDFClassifier:
         else:
             return "Tipo desconhecido"
 
-# Exemplo de uso da classe
-classifier = PDFClassifier()
+if __name__ == "__main__":
+    # Exemplo de uso da classe
+    classifier = PDFClassifier()
 
-# Carregar e processar PDFs de imposto de renda
-classifier.load_pdfs(r".\uploads\ml_files\imposto_de_renda", label=2)
+    # Carregar e processar PDFs de imposto de renda
+    classifier.load_pdfs(r"./uploads/ml_files/imposto_de_renda", label=2)
 
-# Carregar e processar PDFs de notas fiscais
-classifier.load_pdfs(r".\uploads\ml_files\nota_fiscal", label=1)
+    # Carregar e processar PDFs de notas fiscais
+    classifier.load_pdfs(r"./uploads/ml_files/nota_fiscal", label=1)
 
-# Carregar e processar PDFs de boletos
-classifier.load_pdfs(r".\upflow-flsk\uploads\ml_files\boleto", label=0)
+    # Carregar e processar PDFs de boletos
+    classifier.load_pdfs(r"./upflow-flsk/uploads/ml_files\boleto", label=0)
 
-# Treinar o modelo
-classifier.train_model()
+    # Treinar o modelo
+    classifier.train_model()
 
-# Fazer uma predição em um novo PDF
-prediction = classifier.predict_pdf_type(r'.\uploads\ml_files\nota_fiscal\nota_fiscal_0.pdf')
-print(prediction)
+    # Fazer uma predição em um novo PDF
+    prediction = classifier.predict_pdf_type(r'./uploads/ml_files/nota_fiscal/nota_fiscal_0.pdf')
+    print(prediction)
