@@ -1,10 +1,14 @@
 import os
+import json
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
-from app import app, db
-from models import File
+from app import app, db, pdf_classifier
+from models import File, FileData
 from decorators import login_required, permission_required
 from enums import PermissionLevel as pl
+from tools.extractors.boleto_extraction import BoletoExtractionStrategy
+from tools.extractors.nota_fiscal_extraction import NotaFiscalExtractionStrategy
+from tools.extractors.imposto_de_renda_extraction import ImpostoDeRendaExtractionStrategy
 
 # Rota para listar arquivos
 @app.route('/list_files', methods=['GET'])
@@ -53,8 +57,31 @@ def upload_file():
             new_file = File(Status='Uploaded', FilePath=file_path, TemplateID=1) # 1 até definir o fluxo
             db.session.add(new_file)
             db.session.commit()
+
+            prediction = pdf_classifier.predict_pdf_type(file_path)
+
+            if prediction == "Nota Fiscal":
+                extraction_strategy = NotaFiscalExtractionStrategy()
+            elif prediction == "Boleto":
+                extraction_strategy = BoletoExtractionStrategy()
+            elif prediction == "Imposto de Renda":
+                extraction_strategy = ImpostoDeRendaExtractionStrategy()
+            else:
+                raise ValueError("Tipo de documento desconhecido.")
             
-            flash('Arquivo enviado com sucesso!', 'success')
+            # Extrair dados usando a estratégia selecionada
+            text = pdf_classifier.extract_text_from_pdf(file_path)
+            extracted_data = extraction_strategy.extract_data(text)
+
+            # Salva os dados extraídos na tabela FileData
+            new_file_data = FileData(
+                FileID=new_file.FileID,  # Associa o FileData ao File criado
+                Information=json.dumps(extracted_data)  # Converte o dicionário extracted_data para JSON
+            )
+            db.session.add(new_file_data)
+            db.session.commit()
+                    
+            flash(f'Arquivo do tipo {prediction} salvo com sucesso!', 'success')
             return redirect(url_for('upload_file'))
         else:
             flash('Nenhum arquivo selecionado.', 'danger')
