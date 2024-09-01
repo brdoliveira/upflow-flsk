@@ -6,7 +6,16 @@ class NotaFiscalExtractionStrategy(ExtractionStrategy):
         def extract_with_regex(pattern, text, default='', flags=0):
             match = re.search(pattern, text, flags)
             return match.group(1).strip() if match else default
-        
+
+        def format_decimal(value):
+            try:
+                return f"{float(value.replace(',', '.')):.2f}"
+            except ValueError:
+                return value
+
+        # Processamento do texto para garantir que está no formato correto
+        text = text.encode('utf-8').decode('unicode_escape')
+
         data = {
             'Dados da Nota Fiscal': {
                 'Numero da Nota Fiscal': extract_with_regex(r'NFe No (\d+)', text),
@@ -34,7 +43,7 @@ class NotaFiscalExtractionStrategy(ExtractionStrategy):
                 'Presenca do Comprador': extract_with_regex(r'Presença do\s*Comprador\s*([\d -]+[^\n]*)', text, flags=re.DOTALL)
             },
             'Valor Nota Fiscal': {
-                'Valor': extract_with_regex(r'Valor Nota Fiscal\s+([\d,]+)', text).replace(',', '.')
+                'Valor': format_decimal(extract_with_regex(r'Valor Nota Fiscal\s+([\d,]+)', text))
             },
             'Nota': 'Nota Fiscal gerada automaticamente' if 'Nota Fiscal gerada automaticamente' in text else ''
         }
