@@ -1,43 +1,57 @@
 {% extends "template.html" %}
 
 {% block conteudo %}
-<div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">{{ 'Editar Funcionário' if employee else 'Adicionar Funcionário' }}</h1>
-    <form action="{{ url_for('edit_employee', employee_id=employee.EmployeeID) if employee else url_for('add_employee') }}" method="POST" class="max-w-lg mx-auto bg-white shadow-lg p-6">
-        <div class="mb-4">
-            <label for="name" class="block text-lg font-medium">Nome</label>
-            <input type="text" id="name" name="name" value="{{ employee.Name if employee else '' }}" required class="w-full p-2 border border-gray-300 rounded">
+<div class="mt-10 text-center p-4">
+    <h1 class="text-4xl font-bold py-4">{{ 'Editar Funcionário' if employee else 'Adicionar Funcionário' }}</h1>
+    <form
+        action="{{ url_for('edit_employee', employee_id=employee.EmployeeID) if employee else url_for('add_employee') }}"
+        method="POST" class="max-w-lg mx-auto bg-white shadow-lg p-5 d-flex flex-wrap">
+        <div class="col-12 d-flex flex-wrap">
+            <div class="col-6 mb-4 pe-2">
+                <label for="name" class="block text-lg font-medium p-0 m-0">Nome</label>
+                <input type="text" id="name" name="name" value="{{ employee.Name if employee else '' }}" required
+                    class="w-100 p-2 border border-gray-300 rounded p-0 m-0">
+            </div>
+            <div class="col-6 mb-4 ps-2">
+                <label for="email" class="block text-lg font-medium p-0 m-0">Email</label>
+                <input type="email" id="email" name="email" value="{{ employee.Email if employee else '' }}" required
+                    class="w-100 p-2 border border-gray-300 rounded p-0 m-0">
+            </div>
         </div>
-        <div class="mb-4">
-            <label for="email" class="block text-lg font-medium">Email</label>
-            <input type="email" id="email" name="email" value="{{ employee.Email if employee else '' }}" required class="w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div class="mb-4">
-            <label for="password" class="block text-lg font-medium">Senha</label>
-            <input type="password" id="password" name="password" {% if not employee %}required{% endif %} class="w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div class="mb-4">
-            <label for="phone" class="block text-lg font-medium">Telefone</label>
-            <input type="text" id="phone" name="phone" value="{{ employee.Phone if employee else '' }}" class="w-full p-2 border border-gray-300 rounded">
+        <div class="col-12 d-flex flex-wrap">
+            <div class="col-6 mb-4 pe-2">
+                <label for="password" class="block text-lg font-medium p-0 m-0">Senha</label>
+                <input type="password" id="password" name="password" {% if not employee %}required{% endif %}
+                    class="w-100 p-2 border border-gray-300 rounded p-0 m-0">
+            </div>
+            <div class="col-6 mb-4 ps-2">
+                <label for="phone" class="block text-lg font-medium p-0 m-0">Telefone</label>
+                <input type="text" id="phone" name="phone" value="{{ employee.Phone if employee else '' }}"
+                    class="w-100 p-2 border border-gray-300 rounded p-0 m-0">
+            </div>
         </div>
         <div class="mb-4">
             <label for="company_id" class="block text-lg font-medium">Empresa</label>
-            <select id="company_id" name="company_id" class="w-full p-2 border border-gray-300 rounded">
+            <select id="company_id" name="company_id" class="w-100 p-2 border border-gray-300 rounded">
                 {% for company in companies %}
-                <option value="{{ company.CompanyID }}" {% if employee and employee.CompanyID == company.CompanyID %}selected{% endif %}>{{ company.Name }}</option>
+                <option value="{{ company.CompanyID }}" {% if employee and employee.CompanyID==company.CompanyID
+                    %}selected{% endif %}>{{ company.Name }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="mb-4">
             <label for="permission_level_id" class="block text-lg font-medium">Nível de Permissão</label>
-            <select id="permission_level_id" name="permission_level_id" class="w-full p-2 border border-gray-300 rounded">
+            <select id="permission_level_id" name="permission_level_id"
+                class="w-100 p-2 border border-gray-300 rounded">
                 {% for level in permission_levels %}
-                <option value="{{ level.LevelID }}" {% if employee and employee.PermissionLevelID == level.LevelID %}selected{% endif %}>{{ level.Description }}</option>
+                <option value="{{ level.LevelID }}" {% if employee and employee.PermissionLevelID==level.LevelID
+                    %}selected{% endif %}>{{ level.Description }}</option>
                 {% endfor %}
             </select>
         </div>
         <div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">{{ 'Salvar' if employee else 'Adicionar' }}</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">{{ 'Salvar' if employee else
+                'Adicionar' }}</button>
         </div>
     </form>
 </div>
