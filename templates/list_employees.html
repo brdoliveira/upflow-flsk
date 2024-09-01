@@ -1,39 +1,45 @@
 {% extends "template.html" %}
 
 {% block conteudo %}
-<div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">Lista de Funcionários</h1>
-    <a href="{{ url_for('add_employee') }}" class="btn btn-primary mb-4">Adicionar Funcionário</a>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Empresa</th>
-                <th>Nível de Permissão</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for employee in employees %}
-            <tr>
-                <td>{{ employee.EmployeeID }}</td>
-                <td>{{ employee.Name }}</td>
-                <td>{{ employee.Email }}</td>
-                <td>{{ employee.Phone }}</td>
-                <td>{{ employee.Company.Name if employee.Company else 'N/A' }}</td>
-                <td>{{ employee.PermissionLevel.Description if employee.PermissionLevel else 'N/A' }}</td>
-                <td>
-                    <a href="{{ url_for('edit_employee', employee_id=employee.EmployeeID) }}" class="btn btn-warning">Editar</a>
-                    <form action="{{ url_for('delete_employee', employee_id=employee.EmployeeID) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Deletar</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="mt-10 text-center p-4">
+    <h1 class="fs-1 font-bold mb-6 d-flex flex-wrap align-items-center justify-content-center">
+        Lista de Funcionários
+        <a href="{{ url_for('add_employee') }}" class="btn btn-primary ms-4">Adicionar Funcionário</a>
+    </h1>
+    <div style="height: 70vh; overflow-y: scroll;">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Empresa</th>
+                    <th>Nível de Permissão</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.EmployeeID }}</td>
+                    <td>{{ employee.Name }}</td>
+                    <td>{{ employee.Email }}</td>
+                    <td>{{ employee.Phone }}</td>
+                    <td>{{ employee.Company.Name if employee.Company else 'N/A' }}</td>
+                    <td>{{ employee.PermissionLevel.Description if employee.PermissionLevel else 'N/A' }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_employee', employee_id=employee.EmployeeID) }}"
+                            class="btn btn-warning">Editar</a>
+                        <form action="{{ url_for('delete_employee', employee_id=employee.EmployeeID) }}" method="POST"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Deletar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
