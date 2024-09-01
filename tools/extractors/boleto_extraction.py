@@ -7,6 +7,14 @@ class BoletoExtractionStrategy(ExtractionStrategy):
             match = re.search(pattern, text, flags)
             return match.group(1).strip() if match else default
         
+        def format_decimal(value):
+            try:
+                return f"{float(value):.2f}"
+            except ValueError:
+                return value
+            
+        text = text.encode('utf-8').decode('unicode_escape')
+        
         data = {
             'Cedente': {
                 'Nome': extract_with_regex(r'Cedente\n(.*?)\nAgência/Código', text, flags=re.DOTALL),
@@ -18,14 +26,14 @@ class BoletoExtractionStrategy(ExtractionStrategy):
                 'Número do Documento': extract_with_regex(r'Número do Documento\n(\d+)', text),
                 'CPF/CNPJ': extract_with_regex(r'CPF/CNPJ\n([\d./-]+)', text),
                 'Vencimento': extract_with_regex(r'Vencimento\n([\d/]+)', text),
-                'Valor do Documento': extract_with_regex(r'Valor do Documento\n([\d,.]+)', text).replace(',', '.')
+                'Valor do Documento': format_decimal(extract_with_regex(r'Valor do Documento\n([\d,.]+)', text).replace(',', '.'))
             },
             'Descontos e Acréscimos': {
-                'Desconto/Abatimento': extract_with_regex(r'\(-\) Desconto/Abatimento\n([\d,.]+)', text).replace(',', '.'),
-                'Outras Deduções': extract_with_regex(r'\(-\) Outras Deduções\n([\d,.]+)', text).replace(',', '.'),
-                'Mora/Multa': extract_with_regex(r'\(\+\) Mora/Multa\n([\d,.]+)', text).replace(',', '.'),
-                'Outros Acréscimos': extract_with_regex(r'\(\+\) Outros Acréscimos\n([\d,.]+)', text).replace(',', '.'),
-                'Valor Cobrado': extract_with_regex(r'\(=\) Valor Cobrado\n([\d,.]+)', text).replace(',', '.')
+                'Desconto/Abatimento':format_decimal( extract_with_regex(r'\(-\) Desconto/Abatimento\n([\d,.]+)', text).replace(',', '.')),
+                'Outras Deduções': format_decimal(extract_with_regex(r'\(-\) Outras Deduções\n([\d,.]+)', text).replace(',', '.')),
+                'Mora/Multa': format_decimal(extract_with_regex(r'\(\+\) Mora/Multa\n([\d,.]+)', text).replace(',', '.')),
+                'Outros Acréscimos': format_decimal(extract_with_regex(r'\(\+\) Outros Acréscimos\n([\d,.]+)', text).replace(',', '.')),
+                'Valor Cobrado': format_decimal(extract_with_regex(r'\(=\) Valor Cobrado\n([\d,.]+)', text).replace(',', '.'))
             },
             'Sacado': {
                 'Nome': extract_with_regex(r'Sacado\n(.*?)\nAutenticação mecânica', text, flags=re.DOTALL),
