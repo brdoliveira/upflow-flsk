@@ -1,27 +1,29 @@
 {% extends "template.html" %}
 
 {% block conteudo %}
-<div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">Lista de Contatos</h1>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Mensagem</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for contact in contacts %}
-            <tr>
-                <td>{{ contact.ContactID }}</td>
-                <td>{{ contact.Name }}</td>
-                <td>{{ contact.Email }}</td>
-                <td>{{ contact.Message }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="mt-10 text-center p-4">
+    <h1 class="fs-1 font-bold mb-6 d-flex flex-wrap align-items-center justify-content-center">Lista de Contatos</h1>
+    <div style="height: 70vh; overflow-y: scroll;">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Mensagem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr>
+                    <td>{{ contact.ContactID }}</td>
+                    <td>{{ contact.Name }}</td>
+                    <td>{{ contact.Email }}</td>
+                    <td>{{ contact.Message }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
