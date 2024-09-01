@@ -1,41 +1,47 @@
 {% extends "template.html" %}
 
 {% block conteudo %}
-<div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">Lista de Empresas</h1>
-    <a href="{{ url_for('add_company') }}" class="btn btn-primary mb-4">Adicionar Empresa</a>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>CNPJ</th>
-                <th>Endereço</th>
-                <th>Telefone</th>
-                <th>Data de Fundação</th>
-                <th>Setor</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for company in companies %}
-            <tr>
-                <td>{{ company.CompanyID }}</td>
-                <td>{{ company.Name }}</td>
-                <td>{{ company.CNPJ }}</td>
-                <td>{{ company.Address }}</td>
-                <td>{{ company.Phone }}</td>
-                <td>{{ company.FoundationDate }}</td>
-                <td>{{ company.Sector }}</td>
-                <td>
-                    <a href="{{ url_for('edit_company', company_id=company.CompanyID) }}" class="btn btn-warning">Editar</a>
-                    <form action="{{ url_for('delete_company', company_id=company.CompanyID) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Deletar</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="mt-10 text-center p-4">
+    <h1 class="fs-1 font-bold mb-6 d-flex flex-wrap align-items-center justify-content-center">
+        Lista de Empresas
+        <a href="{{ url_for('add_company') }}" class="btn btn-primary ms-4">Adicionar Empresa</a>
+    </h1>
+    <div style="height: 70vh; overflow-y: scroll;">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Endereço</th>
+                    <th>Telefone</th>
+                    <th>Data de Fundação</th>
+                    <th>Setor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                <tr>
+                    <td>{{ company.CompanyID }}</td>
+                    <td>{{ company.Name }}</td>
+                    <td>{{ company.CNPJ }}</td>
+                    <td>{{ company.Address }}</td>
+                    <td>{{ company.Phone }}</td>
+                    <td>{{ company.FoundationDate }}</td>
+                    <td>{{ company.Sector }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_company', company_id=company.CompanyID) }}"
+                            class="btn btn-warning">Editar</a>
+                        <form action="{{ url_for('delete_company', company_id=company.CompanyID) }}" method="POST"
+                            style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Deletar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
