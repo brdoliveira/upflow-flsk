@@ -80,8 +80,10 @@
             </div>
         </nav>
         {% endif %}
-        <div class="{% if session.get('logged_in') %} col-10 {% endif %}">
-            <div class="container">
+        <div
+            class="{% if session.get('logged_in') %} col-10 {% endif %}"
+        >
+            <div style="{% if session.get('logged_in') %} height: 85vh; {% endif %}">
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 <ul id="messages" class="list-unstyled">
