@@ -9,6 +9,7 @@ from enums import PermissionLevel as pl
 from tools.extractors.boleto_extraction import BoletoExtractionStrategy
 from tools.extractors.nota_fiscal_extraction import NotaFiscalExtractionStrategy
 from tools.extractors.imposto_de_renda_extraction import ImpostoDeRendaExtractionStrategy
+import codecs
 
 # Rota para listar arquivos
 @app.route('/list_files', methods=['GET'])
@@ -23,7 +24,29 @@ def list_files():
     - Permissão de EDITOR.
     """
     files = File.query.all()
+    
+    for file in files:
+        for file_data in file.file_data:
+            file_data.Information = decode_unicode_escape(file_data.Information)
+
     return render_template('list_files.html', files=files)
+
+def decode_unicode_escape(data):
+    if isinstance(data, dict):
+        return {key: decode_unicode_escape(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [decode_unicode_escape(item) for item in data]
+    elif isinstance(data, str):
+        try:
+            # Tenta primeiro decodificar a string como 'utf-8' normal
+            data = data.encode('latin1').decode('utf-8')
+            # Tenta decodificar novamente para capturar todas as sequências de escape
+            data = codecs.decode(data, 'unicode_escape')
+            return data
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            return data
+    else:
+        return data
 
 # Rota para fazer upload de arquivos
 @app.route('/upload', methods=['GET', 'POST'])
