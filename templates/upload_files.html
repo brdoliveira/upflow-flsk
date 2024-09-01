@@ -1,9 +1,9 @@
 {% extends "template.html" %}
 
 {% block conteudo %}
-<div class="mt-10 text-center">
-    <h1 class="text-4xl font-bold mb-6">Upload de Arquivo</h1>
-    <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white shadow-lg p-4">
+<div class="mt-10 text-center p-4">
+    <h1 class="fs-1 font-bold mb-6">Upload de Arquivo</h1>
+    <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white shadow-lg p-4 my-4">
         <div class="mb-4">
             <label for="file" class="block text-lg font-medium">Escolha um arquivo</label>
             <input type="file" id="file" name="file" required class="w-full p-2 border border-gray-300 rounded">
