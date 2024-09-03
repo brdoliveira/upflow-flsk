@@ -1,10 +1,14 @@
 import PyPDF2
 import re
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, recall_score
+from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, recall_score, classification_report
 import os
+import pickle
+import json
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class PDFClassifier:
     """
@@ -42,6 +46,21 @@ class PDFClassifier:
     
     predict_pdf_type(pdf_path):
         Prediz o tipo de documento PDF (Nota Fiscal, Boleto, Imposto de Renda) baseado no modelo treinado.
+    
+    tune_hyperparameters():
+        Ajusta os hiperparâmetros do modelo para melhorar a performance.
+    
+    save_model(model_path='model.pkl', vectorizer_path='vectorizer.pkl'):
+        Salva o modelo treinado e o vetorizador em arquivos.
+    
+    load_model(model_path='model.pkl', vectorizer_path='vectorizer.pkl'):
+        Carrega o modelo treinado e o vetorizador a partir de arquivos.
+    
+    log_performance(log_path='model_performance.json', accuracy=None, f1=None, recall=None):
+        Registra a performance do modelo em um arquivo JSON.
+    
+    plot_confusion_matrix(y_test, y_pred):
+        Gera uma visualização gráfica da matriz de confusão.
     """
 
     def __init__(self):
@@ -167,6 +186,10 @@ class PDFClassifier:
         print(f'Acurácia: {accuracy_score(y_test, y_pred) * 100:.2f}%')
         print(f'F1-Score (macro): {f1_score(y_test, y_pred, average="macro"):.2f}')
         print(f'Recall (macro): {recall_score(y_test, y_pred, average="macro"):.2f}')
+        self.plot_confusion_matrix(y_test, y_pred)
+        self.log_performance(accuracy=accuracy_score(y_test, y_pred), 
+                             f1=f1_score(y_test, y_pred, average="macro"), 
+                             recall=recall_score(y_test, y_pred, average="macro"))
 
     def predict_pdf_type(self, pdf_path):
         """
@@ -196,6 +219,127 @@ class PDFClassifier:
         else:
             return "Tipo desconhecido"
 
+    def tune_hyperparameters(self):
+        """
+        Realiza a busca pelos melhores hiperparâmetros para o modelo Naive Bayes Multinomial.
+
+        Retorna:
+        --------
+        dict
+            Os melhores hiperparâmetros encontrados.
+        """
+        # Ajustar o vectorizer antes de procurar os melhores hiperparâmetros
+        X = self.vectorizer.fit_transform(self.pdf_texts)
+        
+        param_grid = {'alpha': [0.1, 0.5, 1.0, 5.0, 10.0]}
+        grid_search = GridSearchCV(self.model, param_grid, cv=5)
+        
+        # Realizar o ajuste com os dados vetorizados
+        grid_search.fit(X, self.labels)
+        
+        print(f'Melhores Hiperparâmetros: {grid_search.best_params_}')
+        return grid_search.best_params_
+
+    def save_model(self, model_path='model.pkl', vectorizer_path='vectorizer.pkl'):
+        """
+        Salva o modelo treinado e o vetorizador em arquivos.
+
+        Parâmetros:
+        -----------
+        model_path : str
+            Caminho para salvar o arquivo do modelo.
+        vectorizer_path : str
+            Caminho para salvar o arquivo do vetorizador.
+
+        Retorna:
+        --------
+        None
+        """
+        with open(model_path, 'wb') as model_file:
+            pickle.dump(self.model, model_file)
+        with open(vectorizer_path, 'wb') as vectorizer_file:
+            pickle.dump(self.vectorizer, vectorizer_file)
+
+    def load_model(self, model_path='model.pkl', vectorizer_path='vectorizer.pkl'):
+        """
+        Carrega o modelo treinado e o vetorizador a partir de arquivos.
+
+        Parâmetros:
+        -----------
+        model_path : str
+            Caminho do arquivo do modelo salvo.
+        vectorizer_path : str
+            Caminho do arquivo do vetorizador salvo.
+
+        Retorna:
+        --------
+        None
+        """
+        with open(model_path, 'rb') as model_file:
+            self.model = pickle.load(model_file)
+        with open(vectorizer_path, 'rb') as vectorizer_file:
+            self.vectorizer = pickle.load(vectorizer_file)
+
+    def log_performance(self, log_path='model_performance.json', accuracy=None, f1=None, recall=None):
+        """
+        Registra a performance do modelo em um arquivo JSON.
+
+        Parâmetros:
+        -----------
+        log_path : str
+            Caminho do arquivo de log de performance.
+        accuracy : float
+            Acurácia do modelo.
+        f1 : float
+            F1-Score do modelo.
+        recall : float
+            Recall do modelo.
+
+        Retorna:
+        --------
+        None
+        """
+        performance_data = {
+            'accuracy': accuracy,
+            'f1_score': f1,
+            'recall': recall
+        }
+        
+        if os.path.exists(log_path):
+            with open(log_path, 'r+') as file:
+                data = json.load(file)
+                data['performances'].append(performance_data)
+                file.seek(0)
+                json.dump(data, file)
+        else:
+            with open(log_path, 'w') as file:
+                json.dump({'performances': [performance_data]}, file)
+
+    def plot_confusion_matrix(self, y_test, y_pred):
+        """
+        Gera uma visualização gráfica da matriz de confusão.
+
+        Parâmetros:
+        -----------
+        y_test : list
+            Os rótulos reais do conjunto de teste.
+        y_pred : list
+            Os rótulos preditos pelo modelo.
+
+        Retorna:
+        --------
+        None
+        """
+        conf_matrix = confusion_matrix(y_test, y_pred)
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", 
+                    xticklabels=['Boleto', 'Nota Fiscal', 'Imposto de Renda'], 
+                    yticklabels=['Boleto', 'Nota Fiscal', 'Imposto de Renda'])
+        plt.ylabel('True Label')
+        plt.xlabel('Predicted Label')
+        plt.title('Matriz de Confusão')
+        plt.show()
+
 if __name__ == "__main__":
     # Exemplo de uso da classe
     classifier = PDFClassifier()
@@ -207,11 +351,24 @@ if __name__ == "__main__":
     classifier.load_pdfs(r"./uploads/ml_files/nota_fiscal", label=1)
 
     # Carregar e processar PDFs de boletos
-    classifier.load_pdfs(r"./upflow-flsk/uploads/ml_files\boleto", label=0)
+    classifier.load_pdfs(r"./uploads/ml_files/boleto", label=0)
+
+    # Ajustar hiperparâmetros (opcional)
+    classifier.tune_hyperparameters()
 
     # Treinar o modelo
     classifier.train_model()
 
     # Fazer uma predição em um novo PDF
     prediction = classifier.predict_pdf_type(r'./uploads/ml_files/nota_fiscal/nota_fiscal_0.pdf')
-    print(prediction)
+    print(f'Predição: {prediction}')
+
+    # Salvar o modelo treinado e o vetorizador
+    classifier.save_model(model_path='pdf_classifier_model.pkl', vectorizer_path='pdf_vectorizer.pkl')
+
+    # Carregar o modelo e o vetorizador salvos
+    classifier.load_model(model_path='pdf_classifier_model.pkl', vectorizer_path='pdf_vectorizer.pkl')
+
+    # Fazer uma nova predição usando o modelo carregado
+    new_prediction = classifier.predict_pdf_type(r'./uploads/ml_files/boleto/boleto_0d3c2b8d56554985be7d4a8f9dbd13fb.pdf')
+    print(f'Nova Predição: {new_prediction}')
