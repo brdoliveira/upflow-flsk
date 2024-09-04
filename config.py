@@ -4,7 +4,7 @@ SECRET_KEY = 'flaskDbUpflow'
 SQLALCHEMY_DATABASE_URI = \
     '{SGBD}://{usuario}:{senha}@{servidor}/{database}'.format(
         SGBD = 'mysql+mysqlconnector',
-        usuario = 'root',
+        usuario = 'admin',
         senha = 'admin',
         servidor = 'localhost',
         database = 'db_upflow'
