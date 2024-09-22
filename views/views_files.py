@@ -76,21 +76,24 @@ def upload_file():
                 os.makedirs(app.config['UPLOAD_FOLDER'])
             
             file.save(file_path)
-            
-            new_file = File(Status='Uploaded', FilePath=file_path, TemplateID=1) # 1 até definir o fluxo
-            db.session.add(new_file)
-            db.session.commit()
-
             prediction = pdf_classifier.predict_pdf_type(file_path)
 
+            templateID = 4
             if prediction == "Nota Fiscal":
                 extraction_strategy = NotaFiscalExtractionStrategy()
+                templateID = 1
             elif prediction == "Boleto":
                 extraction_strategy = BoletoExtractionStrategy()
+                templateID = 2
             elif prediction == "Imposto de Renda":
                 extraction_strategy = ImpostoDeRendaExtractionStrategy()
+                templateID = 3
             else:
                 raise ValueError("Tipo de documento desconhecido.")
+
+            new_file = File(Status='Uploaded', FilePath=file_path, TemplateID=templateID)
+            db.session.add(new_file)
+            db.session.commit()
             
             # Extrair dados usando a estratégia selecionada
             text = pdf_classifier.extract_text_from_pdf(file_path)
@@ -117,13 +120,13 @@ def upload_file():
 @permission_required(pl.EDITOR)
 def delete_file(file_id):
     """
-    Deleta um arquivo.
+    Responsável por deletar um arquivo.
     
     Métodos:
-    - POST: Processa a deleção do arquivo.
+    - POST: Processar a exclusão do arquivo.
     
     Requer:
-    - Usuário autenticado.
+    - Usuário estar autenticado.
     - Permissão de EDITOR.
     """
     file = File.query.get_or_404(file_id)
