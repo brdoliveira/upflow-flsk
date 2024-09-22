@@ -33,12 +33,21 @@ CREATE TABLE tbEmployee (
     FOREIGN KEY (PermissionLevelID) REFERENCES tbPermissionLevel(LevelID)
 );
 
+CREATE TABLE tbTemplate (
+    TemplateID SERIAL PRIMARY KEY,
+    InsertionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Description VARCHAR(255),
+    SelectedData TEXT,
+    FilePath VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE tbFiles (
     FileID SERIAL PRIMARY KEY,
     Status VARCHAR(50),
     InsertionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FilePath VARCHAR(255) NOT NULL,
-    TemplateID INT
+    TemplateID INT,
+    FOREIGN KEY (TemplateID) REFERENCES tbTemplate(TemplateID)
 );
 
 CREATE TABLE tbFileData (
@@ -47,7 +56,8 @@ CREATE TABLE tbFileData (
     FileID INT,
     InsertionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Information JSON,
-    FOREIGN KEY (FileID) REFERENCES tbFiles(FileID)
+    FOREIGN KEY (FileID) REFERENCES tbFiles(FileID),
+    FOREIGN KEY (TemplateID) REFERENCES tbTemplate(TemplateID)
 );
 
 CREATE TABLE tbContacts (
@@ -71,3 +81,9 @@ INSERT INTO tbEmployee (Name, Email, Password, Phone, CompanyID, PermissionLevel
 ('Admin User', 'admin@example.com', 'scrypt:32768:8:1$gvPkYL3FFzIxjUyY$591d3a014eab7edd50c90dc13d2660c1918d51fa60d1cdf8ed3a7a7280b266345fe215e4ab3df0a0efaa8107c2b7748fa3c5d2bd55332058cb9e65d3dfa1ca79', '0987654321',
 (SELECT CompanyID FROM tbCompany WHERE Name='Admin Company'),
 (SELECT LevelID FROM tbPermissionLevel WHERE Description='Admin'));
+
+INSERT INTO tbTemplate (Description, SelectedData, FilePath) VALUES
+('Nota Fiscal - Documento referente a uma transação comercial.', 'Documento fiscal emitido para registrar uma transação comercial.', '/uploads/ml_files/nota_fiscal/'),
+('Boleto Bancário - Documento utilizado para cobrança.', 'Documento utilizado para cobrança de um valor.', '/uploads/ml_files/boleto/'),
+('Imposto de Renda - Documento para declaração anual de rendimentos.', 'Documento utilizado para declaração de rendimentos ao governo.', '/uploads/ml_files/imposto_de_renda/'),
+('Tipo Desconhecido - Documento não identificado.', 'Documento de tipo não identificado.', 'sem arquivo');
