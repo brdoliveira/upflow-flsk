@@ -19,7 +19,7 @@ class Contact(db.Model):
     Message = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Contact %r>' % self.Name
 
 class Company(db.Model):
     """
@@ -44,7 +44,7 @@ class Company(db.Model):
     Sector = db.Column(db.String(100))
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Company %r>' % self.Name
 
 class PermissionLevel(db.Model):
     """
@@ -59,7 +59,7 @@ class PermissionLevel(db.Model):
     Description = db.Column(db.String(255), nullable=False)
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<PermissionLevel %r>' % self.Description
 
 class Employee(db.Model):
     """
@@ -87,7 +87,30 @@ class Employee(db.Model):
     PermissionLevel = db.relationship('PermissionLevel', backref=db.backref('employees', lazy=True))
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<Employee %r>' % self.Name
+
+class Template(db.Model):
+    """
+    Modelo para a tabela de templates.
+    
+    Atributos:
+    - TemplateID: Identificador único do template.
+    - Description: Descrição do template.
+    - SelectedData: Dados selecionados.
+    - FilePath: Caminho do arquivo no sistema de arquivos.
+    - InsertionDate: Data de inserção do template.
+    """
+    __tablename__ = 'tbTemplate'
+    TemplateID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Description = db.Column(db.String(255))
+    SelectedData = db.Column(db.Text)
+    FilePath = db.Column(db.String(255), nullable=False)
+    InsertionDate = db.Column(db.DateTime, default=datetime.utcnow)
+
+    files = db.relationship('File', backref='template', lazy=True)  # Alterado para 'files'
+
+    def __repr__(self):
+        return '<Template %r>' % self.Description
 
 class File(db.Model):
     """
@@ -97,20 +120,20 @@ class File(db.Model):
     - FileID: Identificador único do arquivo.
     - Status: Status do arquivo.
     - InsertionDate: Data de inserção do arquivo.
-    - TemplateID: Identificador do template.
+    - TemplateID: Identificador do template associado.
     - FilePath: Caminho do arquivo no sistema de arquivos.
-    - file_data: Relacionamento com a tabela de dados dos arquivos.
     """
     __tablename__ = 'tbFiles'
-    FileID = db.Column(db.Integer, primary_key=True)
+    FileID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Status = db.Column(db.String(50))
     InsertionDate = db.Column(db.DateTime, default=datetime.utcnow)
     FilePath = db.Column(db.String(255), nullable=False)
-    TemplateID = db.Column(db.Integer)
-    file_data = db.relationship('FileData', backref='file', lazy=True)
+    TemplateID = db.Column(db.Integer, db.ForeignKey('tbTemplate.TemplateID'), nullable=False)
+    
+    file_data = db.relationship('FileData', backref='file', lazy=True)  # Alterado para 'file_data'
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<File %r>' % self.Status
 
     def delete_file(self):
         """
@@ -125,15 +148,17 @@ class FileData(db.Model):
     
     Atributos:
     - DataID: Identificador único dos dados.
+    - TemplateID: Identificador do template associado.
     - FileID: Identificador do arquivo associado.
     - InsertionDate: Data de inserção dos dados.
     - Information: Informações dos dados em formato JSON.
     """
     __tablename__ = 'tbFileData'
-    DataID = db.Column(db.Integer, primary_key=True)
+    DataID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    TemplateID = db.Column(db.Integer, db.ForeignKey('tbTemplate.TemplateID'), nullable=False)
     FileID = db.Column(db.Integer, db.ForeignKey('tbFiles.FileID'), nullable=False)
     InsertionDate = db.Column(db.DateTime, default=datetime.utcnow)
     Information = db.Column(db.JSON, nullable=False)
 
     def __repr__(self):
-        return '<Name %r>' % self.name
+        return '<FileData %r>' % self.DataID
