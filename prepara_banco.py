@@ -5,7 +5,7 @@ print("Conectando...")
 try:
     conn = mysql.connector.connect(
         host='127.0.0.1',
-        user='root',
+        user='admin',
         password='admin'
     )
 except mysql.connector.Error as err:
