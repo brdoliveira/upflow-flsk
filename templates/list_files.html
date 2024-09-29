@@ -3,7 +3,7 @@
 {% block conteudo %}
 <div class="mt-10 text-center p-4">
     <h1 class="fs-1 font-bold mb-6 d-flex flex-wrap align-items-center justify-content-center">Lista de Arquivos</h1>
-    <div style="height: 70vh; overflow-y: scroll;">
+    <div style="height: 60vh; overflow-y: scroll;">
         <table class="table table-bordered table-auto w-full">
             <thead>
                 <tr>
@@ -42,6 +42,28 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="mt-4">
+        <form action="{{ url_for('export_excel') }}" method="POST">
+            <div class="col-12 d-flex flex-wrap">
+                <div class="col-8 d-flex flex-wrap">
+                    <div class="col-3">
+                        <label for="template_select" class="form-label">Selecione um Template:</label>
+                    </div>
+                    <div class="col-9">
+                        <select id="template_select" name="template_id" class="form-control w-100">
+                            <option value="1">Nota Fiscal</option>
+                            <option value="2">Boleto</option>
+                            <option value="3">Imposto de Renda</option>
+                            <option value="4">Outro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4 d-flex align-items-start justify-content-start">
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded ms-3">Exportar para Excel</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
