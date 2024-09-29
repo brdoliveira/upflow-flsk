@@ -1,5 +1,6 @@
 import os
 import json
+import codecs
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from app import app, db, pdf_classifier
@@ -9,7 +10,9 @@ from enums import PermissionLevel as pl
 from tools.extractors.boleto_extraction import BoletoExtractionStrategy
 from tools.extractors.nota_fiscal_extraction import NotaFiscalExtractionStrategy
 from tools.extractors.imposto_de_renda_extraction import ImpostoDeRendaExtractionStrategy
-import codecs
+import pandas as pd
+from flask import send_file
+from io import BytesIO
 
 # Rota para listar arquivos
 @app.route('/list_files', methods=['GET'])
@@ -138,3 +141,44 @@ def delete_file(file_id):
     except Exception as e:
         flash(f'Ocorreu um erro ao deletar o arquivo: {str(e)}', 'danger')
     return redirect(url_for('list_files'))
+
+@app.route('/export_excel', methods=['POST'])
+@login_required
+@permission_required(pl.EDITOR)
+def export_excel():
+    """
+    Exporta os arquivos relacionados a um TemplateID para um arquivo Excel.
+    
+    Requer:
+    - Usuário autenticado.
+    - Permissão de EDITOR.
+    """
+    template_id = request.form.get('template_id')
+    files = File.query.filter_by(TemplateID=template_id).all()
+
+    if not files:
+        flash('Nenhum arquivo encontrado para o Template selecionado.', 'warning')
+        return redirect(url_for('list_files'))
+
+    data = []
+    for file in files:
+        for file_data in file.file_data:
+            data.append({
+                'FileID': file.FileID,
+                'Status': file.Status,
+                'InsertionDate': file.InsertionDate,
+                'FilePath': file.FilePath,
+                'TemplateID': file.TemplateID,
+                'DataID': file_data.DataID,
+                'FileData_InsertionDate': file_data.InsertionDate,
+                'Information': file_data.Information
+            })
+
+    df = pd.DataFrame(data)
+
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Files')
+    
+    output.seek(0)
+    return send_file(output, as_attachment=True, download_name='files_export.xlsx', mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
