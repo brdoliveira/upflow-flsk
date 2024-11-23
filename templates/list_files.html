@@ -33,12 +33,52 @@
                 {% for file_data in file.file_data %}
                 <tr>
                     <td class="border px-4 py-2" colspan="6">
-                        <strong>Data ID:</strong> {{ file_data.DataID }} <br>
-                        <strong>Data de Inserção:</strong> {{ file_data.InsertionDate }} <br>
-                        <strong>Informação:</strong> {{ file_data.Information }}
+                        <div class="p-3 bg-light border rounded">
+                            <h6 class="text-start font-bold"><h3>Detalhes do Arquivo:</h3></h6>
+                            <div class="d-flex flex-wrap">
+                                <div class="px-4"><strong>Data ID:</strong> {{ file_data.DataID }}</div>
+                                <div class="px-4"><strong>Data de Inserção:</strong> {{ file_data.InsertionDate }}</div>
+                                <div class="px-4"><strong>Informação:</strong></div>
+                            </div>
+                            <table class="table table-bordered table-striped" style="border: 2px solid black;">
+                                <thead>
+                                    <tr>
+                                        <th>Chave</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key, value in file_data.Information.items() %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td>
+                                            {% if value is mapping %}
+                                            <table class="table table-bordered">
+                                                {% for sub_key, sub_value in value.items() %}
+                                                <tr>
+                                                    <td><strong>{{ sub_key }}</strong></td>
+                                                    <td>{{ sub_value }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </table>
+                                            {% elif value is sequence and not value is string %}
+                                            <ul>
+                                                {% for item in value %}
+                                                <li>{{ item }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% else %}
+                                            {{ value }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </td>
                 </tr>
-                {% endfor %}
+                {% endfor %}                
                 {% endfor %}
             </tbody>
         </table>
