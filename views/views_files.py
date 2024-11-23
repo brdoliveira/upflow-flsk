@@ -14,25 +14,64 @@ import pandas as pd
 from flask import send_file
 from io import BytesIO
 
-# Rota para listar arquivos
+import json
+import codecs
+from flask import render_template
+
+def decode_unicode_escape(data):
+    if isinstance(data, dict):
+        return {key: decode_unicode_escape(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [decode_unicode_escape(item) for item in data]
+    elif isinstance(data, str):
+        try:
+            data = data.encode('latin1').decode('utf-8')  # Primeira tentativa de decodificar
+            data = codecs.decode(data, 'unicode_escape')  # Segunda tentativa para sequências de escape
+            return data
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            return data
+    else:
+        return data
+
 @app.route('/list_files', methods=['GET'])
 @login_required
 @permission_required(pl.EDITOR)
 def list_files():
     """
-    Lista todos os arquivos.
-    
-    Requer:
-    - Usuário autenticado.
-    - Permissão de EDITOR.
+    Lista todos os arquivos com dados preparados para exibição.
     """
+    # Query para buscar todos os arquivos e seus dados associados
     files = File.query.all()
     
+    # Preparar dados para renderização
+    prepared_files = []
     for file in files:
-        for file_data in file.file_data:
-            file_data.Information = decode_unicode_escape(file_data.Information)
-
-    return render_template('list_files.html', files=files)
+        file_data_list = []
+        for file_data in file.file_data:  # Relacionamento file.file_data
+            try:
+                # Decodificar o campo 'Information' do file_data
+                information = json.loads(file_data.Information)
+                information = decode_unicode_escape(information)
+            except (json.JSONDecodeError, AttributeError):
+                information = {"Erro": "Informação não está no formato JSON."}
+            
+            # Adicionar os dados preparados
+            file_data_list.append({
+                "DataID": file_data.DataID,
+                "InsertionDate": file_data.InsertionDate,
+                "Information": information
+            })
+        
+        prepared_files.append({
+            "FileID": file.FileID,
+            "Status": file.Status,
+            "InsertionDate": file.InsertionDate,
+            "FilePath": file.FilePath,
+            "TemplateID": file.TemplateID,
+            "file_data": file_data_list
+        })
+    
+    return render_template('list_files.html', files=prepared_files)
 
 def decode_unicode_escape(data):
     if isinstance(data, dict):
