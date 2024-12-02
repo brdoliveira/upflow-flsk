@@ -14,25 +14,6 @@ import pandas as pd
 from flask import send_file
 from io import BytesIO
 
-import json
-import codecs
-from flask import render_template
-
-def decode_unicode_escape(data):
-    if isinstance(data, dict):
-        return {key: decode_unicode_escape(value) for key, value in data.items()}
-    elif isinstance(data, list):
-        return [decode_unicode_escape(item) for item in data]
-    elif isinstance(data, str):
-        try:
-            data = data.encode('latin1').decode('utf-8')  # Primeira tentativa de decodificar
-            data = codecs.decode(data, 'unicode_escape')  # Segunda tentativa para sequências de escape
-            return data
-        except (UnicodeEncodeError, UnicodeDecodeError):
-            return data
-    else:
-        return data
-
 @app.route('/list_files', methods=['GET'])
 @login_required
 @permission_required(pl.EDITOR)
