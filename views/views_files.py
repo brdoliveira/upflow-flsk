@@ -96,65 +96,72 @@ def decode_unicode_escape(data):
 @permission_required(pl.EDITOR)
 def upload_file():
     """
-    Faz upload de um novo arquivo.
+    Faz upload de múltiplos arquivos.
     
     Métodos:
     - GET: Renderiza o formulário de upload.
-    - POST: Processa o envio do formulário e salva o arquivo no servidor.
+    - POST: Processa o envio do formulário e salva os arquivos no servidor.
     
     Requer:
     - Usuário autenticado.
     - Permissão de EDITOR.
     """
     if request.method == 'POST':
-        file = request.files['file']
+        # Obtém múltiplos arquivos enviados pelo formulário
+        files = request.files.getlist('file')
         
-        if file:
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            
-            # Verifica se o diretório existe, se não, cria-o
-            if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                os.makedirs(app.config['UPLOAD_FOLDER'])
-            
-            file.save(file_path)
-            prediction = pdf_classifier.predict_pdf_type(file_path)
-
-            templateID = 4
-            if prediction == "Nota Fiscal":
-                extraction_strategy = NotaFiscalExtractionStrategy()
-                templateID = 1
-            elif prediction == "Boleto":
-                extraction_strategy = BoletoExtractionStrategy()
-                templateID = 2
-            elif prediction == "Imposto de Renda":
-                extraction_strategy = ImpostoDeRendaExtractionStrategy()
-                templateID = 3
-            else:
-                raise ValueError("Tipo de documento desconhecido.")
-
-            new_file = File(Status='Uploaded', FilePath=file_path, TemplateID=templateID)
-            db.session.add(new_file)
-            db.session.commit()
-            
-            # Extrair dados usando a estratégia selecionada
-            text = pdf_classifier.extract_text_from_pdf(file_path)
-            extracted_data = extraction_strategy.extract_data(text)
-
-            # Salva os dados extraídos na tabela FileData
-            new_file_data = FileData(
-                FileID=new_file.FileID,  # Associa o FileData ao File criado
-                Information=json.dumps(extracted_data)  # Converte o dicionário extracted_data para JSON
-            )
-            db.session.add(new_file_data)
-            db.session.commit()
-                    
-            flash(f'Arquivo do tipo {prediction} salvo com sucesso!', 'success')
-            return redirect(url_for('upload_file'))
-        else:
+        if not files or all(file.filename == '' for file in files):
             flash('Nenhum arquivo selecionado.', 'danger')
+            return redirect(url_for('upload_file'))
+        
+        for file in files:
+            if file:
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                
+                # Verifica se o diretório existe, se não, cria-o
+                if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                    os.makedirs(app.config['UPLOAD_FOLDER'])
+                
+                file.save(file_path)
+                prediction = pdf_classifier.predict_pdf_type(file_path)
+
+                templateID = 4
+                if prediction == "Nota Fiscal":
+                    extraction_strategy = NotaFiscalExtractionStrategy()
+                    templateID = 1
+                elif prediction == "Boleto":
+                    extraction_strategy = BoletoExtractionStrategy()
+                    templateID = 2
+                elif prediction == "Imposto de Renda":
+                    extraction_strategy = ImpostoDeRendaExtractionStrategy()
+                    templateID = 3
+                else:
+                    flash(f"Tipo de documento desconhecido para o arquivo {filename}.", 'warning')
+                    continue
+
+                new_file = File(Status='Uploaded', FilePath=file_path, TemplateID=templateID)
+                db.session.add(new_file)
+                db.session.commit()
+                
+                # Extrair dados usando a estratégia selecionada
+                text = pdf_classifier.extract_text_from_pdf(file_path)
+                extracted_data = extraction_strategy.extract_data(text)
+
+                # Salva os dados extraídos na tabela FileData
+                new_file_data = FileData(
+                    FileID=new_file.FileID,  # Associa o FileData ao File criado
+                    Information=json.dumps(extracted_data)  # Converte o dicionário extracted_data para JSON
+                )
+                db.session.add(new_file_data)
+                db.session.commit()
+                
+                flash(f'Arquivo "{filename}" do tipo {prediction} salvo com sucesso!', 'success')
+        
+        return redirect(url_for('upload_file'))
     
     return render_template('upload_files.html')
+
 
 # Rota para deletar arquivos
 @app.route('/delete_file/<int:file_id>', methods=['POST'])
