@@ -10,10 +10,8 @@ app.config.from_pyfile('config.py')
 
 db = SQLAlchemy(app)
 pdf_classifier = PDFClassifier()
-pdf_classifier.load_pdfs(f"{path_abs}/uploads/ml_files/imposto_de_renda", label=2)
-pdf_classifier.load_pdfs(f"{path_abs}/uploads/ml_files/nota_fiscal", label=1)
-pdf_classifier.load_pdfs(f"{path_abs}/uploads/ml_files/boleto", label=0)
-pdf_classifier.train_model()
+pdf_classifier.load_dataset(f"{path_abs}/uploads/ml_files/")
+pdf_classifier.train()
 
 from views.views import *
 from views.views_companies import *
