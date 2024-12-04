@@ -191,25 +191,18 @@ class PDFClassifier:
                              f1=f1_score(y_test, y_pred, average="macro"), 
                              recall=recall_score(y_test, y_pred, average="macro"))
 
-    def predict_pdf_type(self, pdf_path):
-        """
-        Prediz o tipo de documento PDF (Nota Fiscal, Boleto, Imposto de Renda) baseado no modelo treinado.
+    def predict_pdf_type(self, pdf_path, confidence_threshold=1):
 
-        Parâmetros:
-        -----------
-        pdf_path : str
-            O caminho completo do arquivo PDF a ser classificado.
-
-        Retorna:
-        --------
-        str
-            O tipo de documento predito ("Nota Fiscal", "Boleto", "Imposto de Renda", ou "Tipo desconhecido").
-        """
         text = self.extract_text_from_pdf(pdf_path)
         preprocessed_text = self.preprocess_text(text)
         vectorized_text = self.vectorizer.transform([preprocessed_text])
+        probabilities = self.model.predict_proba(vectorized_text)[0]
+        max_prob = max(probabilities)
         prediction = self.model.predict(vectorized_text)[0]
-        
+
+        if max_prob < confidence_threshold:
+            return "Tipo desconhecido"
+
         if prediction == 1:
             return "Nota Fiscal"
         elif prediction == 0:
@@ -218,6 +211,7 @@ class PDFClassifier:
             return "Imposto de Renda"
         else:
             return "Tipo desconhecido"
+
 
     def tune_hyperparameters(self):
         """
@@ -231,7 +225,7 @@ class PDFClassifier:
         # Ajustar o vectorizer antes de procurar os melhores hiperparâmetros
         X = self.vectorizer.fit_transform(self.pdf_texts)
         
-        param_grid = {'alpha': [0.1, 0.5, 1.0, 5.0, 10.0]}
+        param_grid = {'alpha': [5.0]}
         grid_search = GridSearchCV(self.model, param_grid, cv=5)
         
         # Realizar o ajuste com os dados vetorizados
